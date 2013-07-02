@@ -1,0 +1,122 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                      http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>dk.tildeslash.cookbook</groupId>
+        <artifactId>cookbook</artifactId>
+        <version>1.0</version>
+    </parent>
+    <artifactId>viewer</artifactId>
+    <packaging>jar</packaging>
+    <version>1.0</version>
+    <name>cookbook.viewer</name>
+    <url>http://tildeslash.dk</url>
+
+    <properties>
+        <jar-name>viewer</jar-name>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>dk.tildeslash.recipe</groupId>
+            <artifactId>common-libs</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${jar-dir}/common-libs.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>dk.tildeslash.cookbook</groupId>
+            <artifactId>common</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${jar-dir}/common.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>dk.tildeslash.cookbook</groupId>
+            <artifactId>editor</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${jar-dir}/editor.jar</systemPath>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <finalName>${jar-name}</finalName>
+                    <appendAssemblyId>false</appendAssemblyId>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <mainClass>dk.tildeslash.cookbook.viewer.Viewer</mainClass>
+                        </manifest>
+                        <manifestEntries>
+                            <Class-Path>editor.jar common.jar common-libs.jar</Class-Path>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.6</version>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <!-- here the phase you need -->
+                        <phase>install</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${jar-dir}</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${basedir}/target/</directory>
+                                    <include>${jar-name}.jar</include>
+                                    <filtering>false</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>ideauidesigner-maven-plugin</artifactId>
+                <version>1.0-beta-2-12.0.4</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>javac2</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <fork>true</fork>
+                    <debug>true</debug>
+                    <failOnError>true</failOnError>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
