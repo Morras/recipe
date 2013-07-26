@@ -22,7 +22,7 @@ import java.util.List;
  * Date: 26/06/12
  * Time: 18:48
  */
-public class IngredientMatchingSelectionPanel extends SelectionPanel{
+public class IngredientMatchingSelectionPanel implements SelectionPanel{
     private JPanel mainPanel;
     private JTextField ingredientTextField;
     private JLabel ingredientLabel;
@@ -43,7 +43,10 @@ public class IngredientMatchingSelectionPanel extends SelectionPanel{
     private Set<Ingredient> customIngredients = new HashSet<>();
     private List<Recipe> allRecipes;
 
-    public IngredientMatchingSelectionPanel(){
+    private JPanel panel;
+
+    @Override
+    public JPanel getPanel(){
 
         try {
             db = MySQLConnector.getInstance();
@@ -59,10 +62,13 @@ public class IngredientMatchingSelectionPanel extends SelectionPanel{
         setupCheckboxes();
         setupListeners();
 
+        panel = new JPanel();
         recipeList.setModel(listModel);
-        setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        setLayout(new BorderLayout());
-        add(mainPanel, BorderLayout.CENTER);
+        panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        panel.setLayout(new BorderLayout());
+        panel.add(mainPanel, BorderLayout.CENTER);
+
+        return panel;
     }
 
     private void setupListeners() {
@@ -174,7 +180,7 @@ public class IngredientMatchingSelectionPanel extends SelectionPanel{
             message = message + "s";
         }
 
-        JOptionPane.showMessageDialog(this, message, "Best matching recipe", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(panel, message, "Best matching recipe", JOptionPane.INFORMATION_MESSAGE);
     }
 
     private void notifySearchListeners() {
@@ -255,7 +261,7 @@ public class IngredientMatchingSelectionPanel extends SelectionPanel{
     }
 
     private void showErrorMessage(String message, String title){
-        JOptionPane.showMessageDialog(this, message, title, JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(panel, message, title, JOptionPane.ERROR_MESSAGE);
     }
 }
 

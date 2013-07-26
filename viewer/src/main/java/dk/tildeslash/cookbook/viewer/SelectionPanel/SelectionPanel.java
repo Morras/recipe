@@ -10,11 +10,13 @@ import javax.swing.*;
  * Date: 25/06/12
  * Time: 15:54
  */
-public abstract class SelectionPanel extends JPanel {
+public interface SelectionPanel {
 
-    public abstract void addSearchCompletedListener(SearchCompletedListener listener);
+    public void addSearchCompletedListener(SearchCompletedListener listener);
 
-    public abstract String getTitle();
+    public String getTitle();
 
-    public abstract void takeFocus();
+    public JPanel getPanel();
+
+    public void takeFocus();
 }

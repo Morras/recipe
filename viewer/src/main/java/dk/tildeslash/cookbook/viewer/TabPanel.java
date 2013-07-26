@@ -26,12 +26,12 @@ public class TabPanel extends JPanel implements SearchCompletedListener{
         this.selectionPanel = selectionPanel;
         this.tabComponent = tabComponent;
         selectionPanel.addSearchCompletedListener(this);
-        add(selectionPanel, BorderLayout.CENTER);
+        add(selectionPanel.getPanel(), BorderLayout.CENTER);
     }
 
     @Override
     public void searchCompleted(Recipe searchResult){
-        remove(selectionPanel);
+        remove(selectionPanel.getPanel());
         recipePanel = new RecipePanel(searchResult);
         recipePanel.addBackListener(new ActionListener() {
             @Override
@@ -46,7 +46,7 @@ public class TabPanel extends JPanel implements SearchCompletedListener{
 
     public void backCalledFromRecipe(){
             remove(recipePanel);
-            add(selectionPanel);
+            add(selectionPanel.getPanel());
             tabComponent.setTitle(selectionPanel.getTitle());
             updateUI();
     }

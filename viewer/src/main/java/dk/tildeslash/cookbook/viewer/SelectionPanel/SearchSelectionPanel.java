@@ -23,7 +23,7 @@ import java.util.List;
  * Date: 23/06/12
  * Time: 15:39
  */
-public class SearchSelectionPanel extends SelectionPanel{
+public class SearchSelectionPanel implements SelectionPanel{
 
     private JTextField nameField = new JTextField();
     private JList<String> recipeList = new JList<>();
@@ -36,8 +36,13 @@ public class SearchSelectionPanel extends SelectionPanel{
 
     private List<SearchCompletedListener> listeners = new LinkedList<>();
 
-    public SearchSelectionPanel(){
-        super();
+    private JPanel panel;
+
+    @Override
+    public JPanel getPanel(){
+        if ( panel != null ){
+            return panel;
+        }
 
         try{
             DataStoreConnector db = MySQLConnector.getInstance();
@@ -50,12 +55,15 @@ public class SearchSelectionPanel extends SelectionPanel{
 
         recipeNames = retrieveRecipeNames(recipes);
 
+        panel = new JPanel();
         setupComponents();
         setupListeners();
+
+        return panel;
     }
 
     private void setupComponents(){
-        this.setLayout(new BorderLayout());
+        panel.setLayout(new BorderLayout());
 
         JPanel headerPanel = new JPanel(new BorderLayout());
         headerPanel.add(new JLabel("Name:"), BorderLayout.NORTH);
@@ -64,7 +72,7 @@ public class SearchSelectionPanel extends SelectionPanel{
 
         headerPanel.setBorder(BorderFactory.createMatteBorder(0,0,1,0, Color.black));
 
-        add(headerPanel, BorderLayout.NORTH);
+        panel.add(headerPanel, BorderLayout.NORTH);
 
         recipeList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         listModel.addAll(recipeNames);
@@ -77,7 +85,7 @@ public class SearchSelectionPanel extends SelectionPanel{
                 }
             }
         });
-        add(scrollPane, BorderLayout.CENTER);
+        panel.add(scrollPane, BorderLayout.CENTER);
     }
 
     private void setupListeners(){
@@ -136,9 +144,10 @@ public class SearchSelectionPanel extends SelectionPanel{
     }
 
     private void showErrorMessage(String message, String title){
-        JOptionPane.showMessageDialog(this, message, title, JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(panel, message, title, JOptionPane.ERROR_MESSAGE);
     }
 
+    @Override
     public void addSearchCompletedListener(SearchCompletedListener listener){
         listeners.add(listener);
     }

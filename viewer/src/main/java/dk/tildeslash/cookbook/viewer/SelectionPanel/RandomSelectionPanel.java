@@ -20,23 +20,29 @@ import java.util.Random;
  * Date: 26/06/12
  * Time: 16:38
  */
-public class RandomSelectionPanel extends SelectionPanel{
+public class RandomSelectionPanel implements SelectionPanel{
 
     private List<SearchCompletedListener> listeners = new LinkedList<>();
     private List<Recipe> recipes;
     private JButton randomButton = new JButton("Get random recipe");
+    private JPanel panel;
 
-    public RandomSelectionPanel(){
+    @Override
+    public JPanel getPanel(){
+        if ( panel != null ){
+            return panel;
+        }
+
         try{
             DataStoreConnector db = MySQLConnector.getInstance();
             recipes = db.retrieveAllRecipes();
         } catch (DataStoreException | NotConfiguredException e){
-           showDatabaseErrorMessage();
+            showDatabaseErrorMessage();
             System.exit(-1);
         }
 
-        setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-
+        panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 
         randomButton.addActionListener(new ActionListener() {
             @Override
@@ -44,9 +50,11 @@ public class RandomSelectionPanel extends SelectionPanel{
                 findRandomRecipe();
             }
         });
-        add(Box.createHorizontalGlue());
-        add(randomButton);
-        add(Box.createHorizontalGlue());
+        panel.add(Box.createHorizontalGlue());
+        panel.add(randomButton);
+        panel.add(Box.createHorizontalGlue());
+
+        return panel;
     }
 
     private void findRandomRecipe(){
@@ -75,7 +83,7 @@ public class RandomSelectionPanel extends SelectionPanel{
     }
 
     private void showDatabaseErrorMessage(){
-        JOptionPane.showMessageDialog(this,
+        JOptionPane.showMessageDialog(panel,
                 "Your database appears to be corrupted, was unable to retrieve recipes.",
                 "Databse error",
                 JOptionPane.ERROR_MESSAGE);
