@@ -324,10 +324,7 @@ public class MySQLConnector implements DataStoreConnector {
 
     @Override
     public boolean addRecipe(Recipe recipe){
-        try ( Connection conn = DriverManager.getConnection("jdbc:mysql://" + host + ":" +
-                port + "/" + database + "?user=" +
-                username + "&password=" + password +
-                "&default-character-set=utf8") ){
+        try ( Connection conn = getConnection() ){
             Statement stmt = conn.createStatement();
 
             createAddRecipeBatch(stmt, recipe);
@@ -417,10 +414,7 @@ public class MySQLConnector implements DataStoreConnector {
         isIngredientCacheValid = false;
 
         //Setup connection
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://" + host + ":" +
-                port + "/" + database + "?user=" +
-                username + "&password=" + password +
-                "&default-character-set=utf8")) {
+        try (Connection conn = getConnection()){
             Statement stmt = conn.createStatement();
             return stmt.executeUpdate(statement);
         } catch (SQLException e) {
@@ -436,6 +430,7 @@ public class MySQLConnector implements DataStoreConnector {
                     username + "&password=" + password +
                     "&default-character-set=utf8");
         } catch (SQLException e){
+            LOGGER.error("Unable to establish connection. " + e.getMessage());
             e.printStackTrace();
         }
         return null;
@@ -519,10 +514,7 @@ public class MySQLConnector implements DataStoreConnector {
     @Override
     public boolean updateRecipe(Recipe oldRecipe, Recipe newRecipe){
 
-        try ( Connection conn = DriverManager.getConnection("jdbc:mysql://" + host + ":" +
-                port + "/" + database + "?user=" +
-                username + "&password=" + password +
-                "&default-character-set=utf8");
+        try ( Connection conn = getConnection();
               Statement stmt = conn.createStatement() ) {
 
             String removeStatement = createRemoveRecipeStatement(oldRecipe);
