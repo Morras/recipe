@@ -2,6 +2,7 @@ package dk.tildeslash.cookbook.editor;
 
 import dk.tildeslash.cookbook.common.datastore.DataStoreConnector;
 import dk.tildeslash.cookbook.common.datastore.MySQLConnector;
+import dk.tildeslash.cookbook.common.exception.ConnectionException;
 import dk.tildeslash.cookbook.common.exception.DataStoreException;
 import dk.tildeslash.cookbook.common.exception.NotConfiguredException;
 import dk.tildeslash.cookbook.common.recipe.Ingredient;
@@ -46,7 +47,7 @@ public class CreateIngredientDialog {
         try{
             db = MySQLConnector.getInstance();
             ingredients = db.retrieveAllIngredients();
-        } catch (NotConfiguredException  | DataStoreException e){
+        } catch (NotConfiguredException  | DataStoreException | ConnectionException e){
             JOptionPane.showMessageDialog(dialog, "There was a problem with connecting to the database,\n" +
                     "The problem is either with the connection or with the configuration file",
                     "Database error", JOptionPane.ERROR_MESSAGE);

@@ -3,6 +3,7 @@ package dk.tildeslash.cookbook.editor;
 import dk.tildeslash.cookbook.common.datastore.Configuration;
 import dk.tildeslash.cookbook.common.datastore.DataStoreConnector;
 import dk.tildeslash.cookbook.common.datastore.MySQLConnector;
+import dk.tildeslash.cookbook.common.exception.ConnectionException;
 import dk.tildeslash.cookbook.common.exception.DataStoreException;
 import dk.tildeslash.cookbook.common.exception.NotConfiguredException;
 import dk.tildeslash.cookbook.common.recipe.Ingredient;
@@ -69,9 +70,12 @@ public class Editor implements ChangeListener{
     }
 
     public Editor() {
+
+        LOGGER.info("Starting Editor");
+
         try{
            db = MySQLConnector.getInstance();
-        } catch (NotConfiguredException | DataStoreException e){
+        } catch (NotConfiguredException | DataStoreException | ConnectionException e){
             showErrorMessage("An error occurred while connecting to the database,\n" +
                     "please check your configuration file and the connection to the database.",
                     "Database Error");

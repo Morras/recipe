@@ -1,5 +1,6 @@
 package dk.tildeslash.cookbook.common.datastore;
 
+import dk.tildeslash.cookbook.common.exception.ConnectionException;
 import dk.tildeslash.cookbook.common.exception.DataStoreException;
 import dk.tildeslash.cookbook.common.exception.NotConfiguredException;
 import dk.tildeslash.cookbook.common.recipe.Ingredient;
@@ -112,14 +113,14 @@ public class MySQLConnectorTest {
             resetStatement.executeBatch();
 
             MySQLConnector.getInstance().invalidateCaches();
-        } catch (SQLException | NotConfiguredException e){
+        } catch (SQLException | NotConfiguredException | ConnectionException e){
             //If we get here we are unable to load the configuration file, so test setup is wrong.
             throw new RuntimeException(e);
         }
     }
 
     @BeforeClass
-    public static void setUp() throws IOException, NotConfiguredException, DataStoreException{
+    public static void setUp() throws IOException, NotConfiguredException, DataStoreException, ConnectionException {
         InputStream sqlInsertsFile = MySQLConnectorTest.class.getResourceAsStream("sql_inserts.sql");
         InputStream sqlResetTablesFile = MySQLConnectorTest.class.getResourceAsStream("sql_reset_tables.sql");
 

@@ -2,6 +2,7 @@ package dk.tildeslash.cookbook.viewer.SelectionPanel;
 
 import dk.tildeslash.cookbook.common.datastore.DataStoreConnector;
 import dk.tildeslash.cookbook.common.datastore.MySQLConnector;
+import dk.tildeslash.cookbook.common.exception.ConnectionException;
 import dk.tildeslash.cookbook.common.exception.DataStoreException;
 import dk.tildeslash.cookbook.common.exception.NotConfiguredException;
 import dk.tildeslash.cookbook.common.recipe.Ingredient;
@@ -51,7 +52,7 @@ public class IngredientMatchingSelectionPanel implements SelectionPanel{
         try {
             db = MySQLConnector.getInstance();
             allRecipes = db.retrieveAllRecipes();
-        } catch (NotConfiguredException e) {
+        } catch (NotConfiguredException | ConnectionException e) {
             showErrorMessage("Unable to connect to the database", "Database Error");
             System.exit(-1);
         } catch (DataStoreException e) {

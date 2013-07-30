@@ -8,6 +8,11 @@ public class DataStoreException extends Exception{
         this.message = message;
     }
 
+    public DataStoreException(String message, Throwable cause){
+        this.message = message;
+        initCause(cause);
+    }
+
     @Override
     public String getMessage(){
         return message;

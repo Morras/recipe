@@ -2,6 +2,7 @@ package dk.tildeslash.cookbook.editor;
 
 import dk.tildeslash.cookbook.common.datastore.DataStoreConnector;
 import dk.tildeslash.cookbook.common.datastore.MySQLConnector;
+import dk.tildeslash.cookbook.common.exception.ConnectionException;
 import dk.tildeslash.cookbook.common.exception.DataStoreException;
 import dk.tildeslash.cookbook.common.exception.NotConfiguredException;
 import dk.tildeslash.cookbook.common.recipe.Ingredient;
@@ -53,7 +54,7 @@ public class CreateRecipeIngredientDialog {
         try{
             DataStoreConnector db = MySQLConnector.getInstance();
             ingredients = db.retrieveAllIngredients();
-        } catch (NotConfiguredException | DataStoreException e){
+        } catch (NotConfiguredException | DataStoreException | ConnectionException e){
             showDataBaseErrorMessage();
             return;
         }
@@ -153,7 +154,7 @@ public class CreateRecipeIngredientDialog {
         String ingredientString = stringField.getText().trim();
         try{
             tmpResult = RecipeIngredientFactory.makeRecipeIngredient(ingredientString);
-        } catch (NotConfiguredException | DataStoreException e){
+        } catch (NotConfiguredException | DataStoreException | ConnectionException e){
             showDataBaseErrorMessage();
         }
         if(tmpResult == null){
@@ -164,7 +165,7 @@ public class CreateRecipeIngredientDialog {
             try{
                 DataStoreConnector db = MySQLConnector.getInstance();
                 ingredients = db.retrieveAllIngredients();
-            } catch (NotConfiguredException | DataStoreException e){
+            } catch (NotConfiguredException | DataStoreException | ConnectionException e){
                 showDataBaseErrorMessage();
                 return;
             }

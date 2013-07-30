@@ -52,6 +52,8 @@ public class Viewer{
 
     public Viewer(){
 
+        LOGGER.info("Starting Viewer");
+
         setupComponents();
         setupMenu();
         setupListeners();

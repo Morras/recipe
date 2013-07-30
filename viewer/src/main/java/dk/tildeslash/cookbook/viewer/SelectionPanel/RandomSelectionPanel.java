@@ -2,6 +2,7 @@ package dk.tildeslash.cookbook.viewer.SelectionPanel;
 
 import dk.tildeslash.cookbook.common.datastore.DataStoreConnector;
 import dk.tildeslash.cookbook.common.datastore.MySQLConnector;
+import dk.tildeslash.cookbook.common.exception.ConnectionException;
 import dk.tildeslash.cookbook.common.exception.DataStoreException;
 import dk.tildeslash.cookbook.common.exception.NotConfiguredException;
 import dk.tildeslash.cookbook.common.recipe.Recipe;
@@ -36,7 +37,7 @@ public class RandomSelectionPanel implements SelectionPanel{
         try{
             DataStoreConnector db = MySQLConnector.getInstance();
             recipes = db.retrieveAllRecipes();
-        } catch (DataStoreException | NotConfiguredException e){
+        } catch (DataStoreException | NotConfiguredException | ConnectionException e){
             showDatabaseErrorMessage();
             System.exit(-1);
         }

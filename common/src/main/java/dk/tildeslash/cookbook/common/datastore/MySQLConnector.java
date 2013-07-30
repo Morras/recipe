@@ -1,11 +1,13 @@
 package dk.tildeslash.cookbook.common.datastore;
 
 import dk.tildeslash.cookbook.common.exception.DataStoreException;
+import dk.tildeslash.cookbook.common.exception.ConnectionException;
 import dk.tildeslash.cookbook.common.exception.NotConfiguredException;
 import dk.tildeslash.cookbook.common.recipe.Ingredient;
 import dk.tildeslash.cookbook.common.recipe.Recipe;
 import dk.tildeslash.cookbook.common.recipe.RecipeIngredient;
 import dk.tildeslash.cookbook.common.recipe.RecipeSection;
+import dk.tildeslash.cookbook.common.datastore.connectionpool.MySQLConnectionPool;
 import org.apache.log4j.Logger;
 
 import java.sql.*;
@@ -20,6 +22,7 @@ import java.util.List;
 public class MySQLConnector implements DataStoreConnector {
 
     static private MySQLConnector instance = null;
+    static private MySQLConnectionPool connectionPool;
 
     private String host = null;
     private short port = 0;
@@ -38,9 +41,10 @@ public class MySQLConnector implements DataStoreConnector {
      * @throws NotConfiguredException if the configuration file used for setting data store parameters are flawed, or not present.
      * @throws DataStoreException if there is a problem connecting to the database.
      */
-    static public MySQLConnector getInstance() throws NotConfiguredException, DataStoreException {
+    static public MySQLConnector getInstance() throws NotConfiguredException, DataStoreException, ConnectionException {
         if(instance == null){
             instance = new MySQLConnector();
+            connectionPool = MySQLConnectionPool.getInstance();
         }
         return instance;
     }
@@ -158,6 +162,7 @@ public class MySQLConnector implements DataStoreConnector {
             }
         }
         catch(SQLException e){
+            LOGGER.error("Exception while retrieving all recipes: " + e.getMessage());
             e.printStackTrace();
         }
         return recipes;
@@ -425,15 +430,12 @@ public class MySQLConnector implements DataStoreConnector {
 
     private Connection getConnection(){
         try{
-            return DriverManager.getConnection("jdbc:mysql://" + host + ":" +
-                    port + "/" + database + "?user=" +
-                    username + "&password=" + password +
-                    "&default-character-set=utf8");
-        } catch (SQLException e){
+            return connectionPool.getConnection();
+        } catch (ConnectionException e) {
             LOGGER.error("Unable to establish connection. " + e.getMessage());
             e.printStackTrace();
         }
-        return null;
+        return null; //TODO do not return null, throw exception and propagate to user facing method
     }
 
     /**

@@ -2,6 +2,7 @@ package dk.tildeslash.cookbook.viewer;
 
 import dk.tildeslash.cookbook.common.datastore.DataStoreConnector;
 import dk.tildeslash.cookbook.common.datastore.MySQLConnector;
+import dk.tildeslash.cookbook.common.exception.ConnectionException;
 import dk.tildeslash.cookbook.common.exception.DataStoreException;
 import dk.tildeslash.cookbook.common.exception.NotConfiguredException;
 import dk.tildeslash.cookbook.common.recipe.Recipe;
@@ -137,7 +138,7 @@ public class RecipePanel extends JPanel {
         try{
             DataStoreConnector db = MySQLConnector.getInstance();
             refreshedRecipe = db.retrieveRecipeMatchingName(recipe.getName());
-        } catch (NotConfiguredException | DataStoreException e){
+        } catch (NotConfiguredException | DataStoreException | ConnectionException e){
             showDatabaseErrorMessage();
             return;
         }

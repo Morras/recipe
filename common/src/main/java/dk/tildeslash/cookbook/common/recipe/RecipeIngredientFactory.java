@@ -2,6 +2,7 @@ package dk.tildeslash.cookbook.common.recipe;
 
 import dk.tildeslash.cookbook.common.datastore.DataStoreConnector;
 import dk.tildeslash.cookbook.common.datastore.MySQLConnector;
+import dk.tildeslash.cookbook.common.exception.ConnectionException;
 import dk.tildeslash.cookbook.common.exception.DataStoreException;
 import dk.tildeslash.cookbook.common.exception.NotConfiguredException;
 import dk.tildeslash.cookbook.common.exception.NoFixesFoundException;
@@ -17,7 +18,7 @@ public class RecipeIngredientFactory {
 
     private static final Logger LOGGER = Logger.getLogger(RecipeIngredientFactory.class);
 
-    static public RecipeIngredient makeRecipeIngredient(String input) throws NotConfiguredException, DataStoreException{
+    static public RecipeIngredient makeRecipeIngredient(String input) throws NotConfiguredException, DataStoreException, ConnectionException {
         LOGGER.trace("called: makeRecipeIngredient( \"" + input + "\" )");
         if(input == null){
             LOGGER.warn("input was null, returning null");
@@ -52,7 +53,7 @@ public class RecipeIngredientFactory {
         return new RecipeIngredient(prefix, ingredient, suffix);
     }
 
-    private static String findIngredientName(String input) throws NotConfiguredException, DataStoreException {
+    private static String findIngredientName(String input) throws NotConfiguredException, DataStoreException, ConnectionException {
         LOGGER.trace("called: findIngredientName( \"" + input + "\" )");
 
         DataStoreConnector db = MySQLConnector.getInstance();

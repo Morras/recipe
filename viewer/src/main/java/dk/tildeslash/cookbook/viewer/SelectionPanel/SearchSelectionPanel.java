@@ -2,6 +2,7 @@ package dk.tildeslash.cookbook.viewer.SelectionPanel;
 
 import dk.tildeslash.cookbook.common.datastore.DataStoreConnector;
 import dk.tildeslash.cookbook.common.datastore.MySQLConnector;
+import dk.tildeslash.cookbook.common.exception.ConnectionException;
 import dk.tildeslash.cookbook.common.exception.DataStoreException;
 import dk.tildeslash.cookbook.common.exception.NotConfiguredException;
 import dk.tildeslash.cookbook.common.recipe.Recipe;
@@ -47,7 +48,7 @@ public class SearchSelectionPanel implements SelectionPanel{
         try{
             DataStoreConnector db = MySQLConnector.getInstance();
             recipes = db.retrieveAllRecipes();
-        } catch (DataStoreException | NotConfiguredException e){
+        } catch (DataStoreException | NotConfiguredException | ConnectionException e){
             showErrorMessage("Problem connecting to the database, it may be corrupt.",
                     "Corrupted datastore");
             System.exit(-1);
