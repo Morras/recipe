@@ -80,18 +80,12 @@ class IngredientPanel extends JPanel implements AddIngredientListener{
     }
 
     private void editIngredientClicked() {
-        int selected = ingredientList.getSelectedIndex();
-        if ( selected != -1 ) {
+        int selectedIndex = ingredientList.getSelectedIndex();
+        if ( selectedIndex != -1 ) {
             RecipeIngredient oldIngredient = ingredientList.getSelectedValue();
-            CreateRecipeIngredientDialog dialog = new CreateRecipeIngredientDialog(oldIngredient);
+            CreateRecipeIngredientDialog dialog = new CreateRecipeIngredientDialog(oldIngredient, selectedIndex);
 
             dialog.addAddIngredientListener(this);
-
-            listModel.remove(oldIngredient);
-            ingredientList.updateUI();
-            JOptionPane.showMessageDialog(null, "The ingredient has been removed, and you can now add it again",
-                    "Editing Ingredient", JOptionPane.INFORMATION_MESSAGE);
-
             dialog.showDialog(findParent());
             requestFocus();
         }
@@ -164,9 +158,22 @@ class IngredientPanel extends JPanel implements AddIngredientListener{
         notifyChangeSubscribers();
     }
 
+    public void addIngredient(RecipeIngredient ingredient, int index){
+
+        listModel.remove(index);
+        listModel.add(index, ingredient);
+        ingredientList.updateUI();
+        notifyChangeSubscribers();
+    }
+
     @Override
     public void addIngredientEvent(RecipeIngredient ingredient){
         addIngredient(ingredient);
+    }
+
+    @Override
+    public void addIngredientEvent(RecipeIngredient ingredient, int index){
+        addIngredient(ingredient, index);
     }
 }
 

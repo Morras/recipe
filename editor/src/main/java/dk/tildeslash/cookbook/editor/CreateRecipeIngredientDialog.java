@@ -35,8 +35,11 @@ public class CreateRecipeIngredientDialog {
 
     private List<AddIngredientListener> addIngredientListeners = new LinkedList<>();
 
-    public CreateRecipeIngredientDialog(RecipeIngredient input) {
+    private int index = -1;
+
+    public CreateRecipeIngredientDialog(RecipeIngredient input, int index) {
         this();
+        this.index = index;
         prefixField.setText(input.getPrefix());
         suffixField.setText(input.getSuffix());
         defaultIngredient = input.getIngredient();
@@ -137,8 +140,14 @@ public class CreateRecipeIngredientDialog {
         RecipeIngredient result = new RecipeIngredient(prefixField.getText().trim(), ingredient, suffixField.getText().trim());
 
         for(AddIngredientListener listener: addIngredientListeners){
-            listener.addIngredientEvent(result);
+            if ( index != -1 ){
+                listener.addIngredientEvent(result, index);
+            } else {
+                listener.addIngredientEvent(result);
+            }
         }
+
+        index = -1;
 
         prefixField.setText("");
         ingredientBox.setSelectedIndex(-1);
