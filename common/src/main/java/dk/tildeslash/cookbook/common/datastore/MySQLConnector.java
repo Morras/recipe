@@ -49,46 +49,6 @@ public class MySQLConnector implements DataStoreConnector {
         return instance;
     }
 
-    /**
-     * Sets up the connector and database configuration.
-     * @throws NotConfiguredException if Configuration is not loaded, or it is unable to load from the default configuration file.
-     * @throws DataStoreException if there is a problem connecting to the database.
-     */
-    private MySQLConnector() throws NotConfiguredException, DataStoreException {
-
-        //Let us try with the configuration already set
-        //or set a new one if we catch an exception
-        int tries = 0;
-        while(host == null || port == 0 || database == null ||
-                username == null || password == null){
-            try{
-                host = Configuration.getHost();
-                port = Configuration.getPort();
-                database = Configuration.getDatabase();
-                username = Configuration.getDbUser();
-                password = Configuration.getDbPassword();
-            }
-            catch(NotConfiguredException e){
-                Configuration.load();
-            }
-            tries++;
-            if(tries == 2){
-                break;
-            }
-        }
-        if(tries == 3){
-            throw new NotConfiguredException("Unable to load configuration from file");
-        }
-        //Not sure what to do with these exceptions
-        try{
-            Class.forName("com.mysql.jdbc.Driver").newInstance();
-        }
-        catch(ClassNotFoundException | InstantiationException | IllegalAccessException e){
-            LOGGER.error("Exceptions while setting up the connector: " + e.getMessage());
-            throw new DataStoreException("Unable to connect to the database");
-        }
-    }
-
     @Override //TODO needs testing
     public List<Ingredient> retrieveMostPopularIngredients(int limit, boolean includeCommon) {
 
