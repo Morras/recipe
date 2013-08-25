@@ -13,6 +13,8 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.*;
@@ -86,6 +88,15 @@ public class SearchSelectionPanel implements SelectionPanel{
                 }
             }
         });
+        recipeList.addKeyListener(new KeyAdapter() {
+           @Override
+            public void keyReleased(KeyEvent e){
+               if ( e.getKeyCode() == KeyEvent.VK_ENTER) {
+                   notifySearchListeners();
+               }
+           }
+        });
+        recipeList.setSelectedIndex(0);
         panel.add(scrollPane, BorderLayout.CENTER);
     }
 
