@@ -23,7 +23,7 @@ public class MySQLConnectionPool {
     Boolean[] inUse = new Boolean[POOL_SIZE];
 
     //Variables for measuring performance
-    private int activeConnections = 0;
+    private int unPooledConnections = 0;
     private int reusedConnections = 0;
 
     private static MySQLConnectionPool instance;
@@ -96,7 +96,7 @@ public class MySQLConnectionPool {
                 setInUse(i);
 
                 try{
-                    if ( ! connection.isValid(5) ){
+                    if ( ! connection.isValid(3) ){
                         LOGGER.warn("A connection is no longer valid.");
                         connection = createConnection();
                     } else {
@@ -111,14 +111,14 @@ public class MySQLConnectionPool {
             }
         }
 
+        unPooledConnections++;
         connection = createConnection();
         return new PooledSqlConnection(this, connection, false);
     }
 
     private Connection createConnection() throws ConnectionException{
         try{
-            activeConnections++;
-            LOGGER.info("Creating a connection, there are " + activeConnections + " active connections.");
+            LOGGER.info("Creating a connection, there have been a total of " + unPooledConnections + " unpooled connections.");
             return DriverManager.getConnection("jdbc:mysql://" + host + ":" +
                     port + "/" + database + "?user=" +
                     username + "&password=" + password +
@@ -153,7 +153,6 @@ public class MySQLConnectionPool {
                     }
                 }
                 inUse[i] = false;
-                activeConnections--;
                 return;
             }
         }
